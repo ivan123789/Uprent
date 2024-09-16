@@ -11,16 +11,14 @@ namespace SimpleApp
     public partial class MainWindow : Window
     {
         private readonly HttpService _httpService;
-        private readonly UserRolesWindow _userRolesWindowService; 
 
         private int _selectedUserId = -1; // To store the selected UserId
         public ObservableCollection<UserDto> Users { get; set; } = new ObservableCollection<UserDto>();
 
-        public MainWindow(HttpService httpService, UserRolesWindow userRolesWindowService)
+        public MainWindow(HttpService httpService)
         {
             InitializeComponent();
             _httpService = httpService;
-            _userRolesWindowService = userRolesWindowService; 
 
             // Set the DataContext for binding
             DataContext = this;
@@ -50,8 +48,9 @@ namespace SimpleApp
         // Handle Create button click
         private void btnCreate_Click(object sender, RoutedEventArgs e)
         {
-            _userRolesWindowService.InitCreate("Novi korisnik");
-            _userRolesWindowService.ShowDialog();
+            var userRolesWindow = new UserRolesWindow(_httpService);
+            userRolesWindow.InitCreate("Novi korisnik");
+            userRolesWindow.ShowDialog();
             LoadData(); // Refresh user data after closing the window
         }
 
@@ -67,9 +66,9 @@ namespace SimpleApp
             var selectedUser = dataGridUsers.SelectedItem as UserDto;
             if (selectedUser != null)
             {
-                //var userRolesWindow = _userRolesWindowService(); // Use factory to create window
-                _userRolesWindowService.InitUpdate(selectedUser.UserId, selectedUser.Username, selectedUser.UserRoleIds);
-                _userRolesWindowService.ShowDialog();
+                var userRolesWindow = new UserRolesWindow(_httpService);
+                userRolesWindow.InitUpdate(selectedUser.UserId, selectedUser.Username, selectedUser.UserRoleIds);
+                userRolesWindow.ShowDialog();
                 LoadData(); // Refresh user data after closing the window
             }
         }
@@ -113,11 +112,8 @@ namespace SimpleApp
                     ModifiedBy = 1 // Hardcoded value
                 };
 
-                // Send DELETE request with payload
-                //var response = await _httpService.DeleteAsync($"users", request);
                 var response = await SoftDeleteUserAsync(request.UserId, request.ModifiedBy);
 
-                // Check response (assuming successful if status code is 200)
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)

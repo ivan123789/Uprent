@@ -61,7 +61,7 @@ namespace SimpleAppAPI.Repositories
             {
                 try
                 {
-                    // Assume that all DTOs in the list refer to the same user, so get the UserId from the first item
+                    // All DTOs in the list refer to the same user, so get the UserId from the first item
                     var userId = await SaveUser(userRoleDtos[0]);
 
                     // Loop through each role DTO and handle each case (add or update/soft delete)

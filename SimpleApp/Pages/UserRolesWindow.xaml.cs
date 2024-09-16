@@ -1,4 +1,5 @@
 ﻿using SimpleAppEntityLibrary.DTOs;
+using SimpleAppUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,14 +18,6 @@ namespace SimpleApp
 
         public ObservableCollection<Group> Groups { get; set; } = new ObservableCollection<Group>();
 
-        // Model for Group
-        public class Group
-        {
-            public string GroupName { get; set; }
-            public bool IsAdded { get; set; }
-        }
-
-        // Default constructor
         public UserRolesWindow(HttpService httpService)
         {
             InitializeComponent();
@@ -46,7 +39,6 @@ namespace SimpleApp
             _userRoleIds = userRoleIds;
             txtUsername.Text = username;
             LoadGroups(); // Load group data
-            LoadUserRoles(); // Load user-specific data
         }
 
         // Load the groups into the DataGrid
@@ -74,12 +66,6 @@ namespace SimpleApp
             }
         }
 
-        // Load user-specific roles (if needed)
-        private async void LoadUserRoles()
-        {
-            // Logic to load and display user-specific data
-            // This method can be used if you need to show user-specific data or modify it
-        }
 
         // Exit button logic
         private void btnExit_Click(object sender, RoutedEventArgs e)
