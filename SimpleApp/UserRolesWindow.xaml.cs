@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 
 namespace SimpleApp
@@ -13,6 +14,7 @@ namespace SimpleApp
         private List<int>? _userRoleIds = new List<int>();
         private List<RoleDto> roles;
         private bool _isSaveAndExitClicked = false;
+
         public ObservableCollection<Group> Groups { get; set; } = new ObservableCollection<Group>();
 
         // Model for Group
@@ -22,22 +24,28 @@ namespace SimpleApp
             public bool IsAdded { get; set; }
         }
 
-        // Constructor for create
-        public UserRolesWindow(HttpService httpService, string username)
+        // Default constructor
+        public UserRolesWindow(HttpService httpService)
         {
             InitializeComponent();
             _httpService = httpService;
-            txtUsername.Text = username;
             DataContext = this;
+        }
 
+        // Initialization method for Create
+        public void InitCreate(string username)
+        {
+            txtUsername.Text = username;
             LoadGroups(); // Load group data
         }
 
-        // Constructor for update (with user ID)
-        public UserRolesWindow(HttpService httpService, int userId, string username, List<int> userRoleIds) : this(httpService, username)
+        // Initialization method for Update
+        public void InitUpdate(int userId, string username, List<int> userRoleIds)
         {
             _userId = userId;
             _userRoleIds = userRoleIds;
+            txtUsername.Text = username;
+            LoadGroups(); // Load group data
             LoadUserRoles(); // Load user-specific data
         }
 
@@ -144,7 +152,7 @@ namespace SimpleApp
             if (!_isSaveAndExitClicked)
             {
                 // Show a confirmation message box when the user tries to close the window
-                var result = MessageBox.Show("Jeste li sigurni da želite izaći? Sve eventualne izmjene će biti izgubljene.",
+                var result = MessageBox.Show("Jeste li sigurni da želite izaći? Sve eventualne izmjene koje nisu spremljene mogu biti izgubljene.",
                                              "Potvrda zatvaranja prozora",
                                              MessageBoxButton.YesNo,
                                              MessageBoxImage.Warning);
@@ -159,7 +167,5 @@ namespace SimpleApp
             // Reset the flag
             _isSaveAndExitClicked = false;
         }
-
-
     }
 }

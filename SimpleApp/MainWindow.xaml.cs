@@ -47,7 +47,8 @@ namespace SimpleApp
         // Handle Create button click
         private void btnCreate_Click(object sender, RoutedEventArgs e)
         {
-            UserRolesWindow userRolesWindow = new UserRolesWindow(_httpService, "Novi korisnik");
+            var userRolesWindow = new UserRolesWindow(_httpService);
+            userRolesWindow.InitCreate("Novi korisnik");
             userRolesWindow.ShowDialog();
             LoadData(); // Refresh user data after closing the window
         }
@@ -64,11 +65,13 @@ namespace SimpleApp
             var selectedUser = dataGridUsers.SelectedItem as UserDto;
             if (selectedUser != null)
             {
-                UserRolesWindow userRolesWindow = new UserRolesWindow(_httpService, selectedUser.UserId, selectedUser.Username, selectedUser.UserRoleIds);
+                var userRolesWindow = new UserRolesWindow(_httpService);
+                userRolesWindow.InitUpdate(selectedUser.UserId, selectedUser.Username, selectedUser.UserRoleIds);
                 userRolesWindow.ShowDialog();
                 LoadData(); // Refresh user data after closing the window
             }
         }
+
 
         // Handle Delete button click
         private async void btnDelete_Click(object sender, RoutedEventArgs e)
