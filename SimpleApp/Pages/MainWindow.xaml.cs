@@ -1,4 +1,5 @@
-﻿using SimpleAppEntityLibrary.DTOs;
+﻿using Microsoft.Extensions.DependencyInjection;
+using SimpleAppEntityLibrary.DTOs;
 using System;
 using System.Collections.ObjectModel;
 using System.Net.Http;
@@ -10,20 +11,22 @@ namespace SimpleApp
     public partial class MainWindow : Window
     {
         private readonly HttpService _httpService;
+        private readonly UserRolesWindow _userRolesWindowService; 
+
         private int _selectedUserId = -1; // To store the selected UserId
         public ObservableCollection<UserDto> Users { get; set; } = new ObservableCollection<UserDto>();
 
-        public MainWindow(HttpService httpService)
+        public MainWindow(HttpService httpService, UserRolesWindow userRolesWindowService)
         {
             InitializeComponent();
             _httpService = httpService;
+            _userRolesWindowService = userRolesWindowService; 
 
             // Set the DataContext for binding
             DataContext = this;
 
             // Load data from API when MainWindow is initialized
             LoadData();
-
         }
 
         // Load data from API
@@ -47,9 +50,8 @@ namespace SimpleApp
         // Handle Create button click
         private void btnCreate_Click(object sender, RoutedEventArgs e)
         {
-            var userRolesWindow = new UserRolesWindow(_httpService);
-            userRolesWindow.InitCreate("Novi korisnik");
-            userRolesWindow.ShowDialog();
+            _userRolesWindowService.InitCreate("Novi korisnik");
+            _userRolesWindowService.ShowDialog();
             LoadData(); // Refresh user data after closing the window
         }
 
@@ -65,13 +67,12 @@ namespace SimpleApp
             var selectedUser = dataGridUsers.SelectedItem as UserDto;
             if (selectedUser != null)
             {
-                var userRolesWindow = new UserRolesWindow(_httpService);
-                userRolesWindow.InitUpdate(selectedUser.UserId, selectedUser.Username, selectedUser.UserRoleIds);
-                userRolesWindow.ShowDialog();
+                //var userRolesWindow = _userRolesWindowService(); // Use factory to create window
+                _userRolesWindowService.InitUpdate(selectedUser.UserId, selectedUser.Username, selectedUser.UserRoleIds);
+                _userRolesWindowService.ShowDialog();
                 LoadData(); // Refresh user data after closing the window
             }
         }
-
 
         // Handle Delete button click
         private async void btnDelete_Click(object sender, RoutedEventArgs e)
