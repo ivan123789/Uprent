@@ -1,0 +1,12 @@
+﻿<Window x:Class="SimpleAppUI.Pages.CustomYesNoDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{Binding DialogTitle}" Height="200" Width="400" WindowStartupLocation="CenterOwner">
+    <StackPanel>
+        <TextBlock Text="{Binding DialogQuestion}" Margin="10" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <Button Content="Da" Width="80" Margin="5" Click="OnYesClick"/>
+            <Button Content="Ne" Width="80" Margin="5" Click="OnNoClick"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

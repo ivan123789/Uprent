@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SimpleAppEntityLibrary.DTOs;
+using SimpleAppUI.Pages;
 using System;
 using System.Collections.ObjectModel;
 using System.Net.Http;
@@ -82,10 +83,10 @@ namespace SimpleApp
                 return;
             }
 
-            var result = MessageBox.Show($"Jeste li sigurni da želite obrisati korisnika s korisničkim id-em {_selectedUserId}?",
-                "Potvrda brisanja", MessageBoxButton.YesNo);
+            var dialog = new CustomYesNoDialog("Potvrda brisanja", $"Jeste li sigurni da želite obrisati korisnika s korisničkim id-em {_selectedUserId}?");
+            bool? result = dialog.ShowDialog();
 
-            if (result == MessageBoxResult.Yes)
+            if (result == true) // User clicked "Da"
             {
                 bool isDeleted = await DeleteUserAsync(_selectedUserId);
                 if (isDeleted)

@@ -1,5 +1,6 @@
 ﻿using SimpleAppEntityLibrary.DTOs;
 using SimpleAppUI;
+using SimpleAppUI.Pages;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -137,21 +138,18 @@ namespace SimpleApp
         {
             if (!_isSaveAndExitClicked)
             {
-                // Show a confirmation message box when the user tries to close the window
-                var result = MessageBox.Show("Jeste li sigurni da želite izaći? Sve eventualne izmjene koje nisu spremljene mogu biti izgubljene.",
-                                             "Potvrda zatvaranja prozora",
-                                             MessageBoxButton.YesNo,
-                                             MessageBoxImage.Warning);
+                var dialog = new CustomYesNoDialog("Potvrda zatvaranja prozora",
+                                                   "Jeste li sigurni da želite izaći? Sve eventualne izmjene koje nisu spremljene mogu biti izgubljene.");
+                bool? result = dialog.ShowDialog();
 
-                // If the user selects "No", cancel the closing event
-                if (result == MessageBoxResult.No)
+                if (result == false) // User clicked "Ne"
                 {
-                    e.Cancel = true;
+                    e.Cancel = true; // Cancel the closing event
                 }
             }
 
-            // Reset the flag
-            _isSaveAndExitClicked = false;
+            _isSaveAndExitClicked = false; // Reset the flag
         }
+
     }
 }
