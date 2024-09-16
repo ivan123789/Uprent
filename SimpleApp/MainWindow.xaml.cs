@@ -55,48 +55,46 @@ namespace SimpleApp
         // Handle Update button click
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
-            if (_selectedUserId != -1)
+            if (dataGridUsers.SelectedItem == null) // No user is selected
             {
-                var selectedUser = dataGridUsers.SelectedItem as UserDto;
-                if (selectedUser != null)
-                {
-                    UserRolesWindow userRolesWindow = new UserRolesWindow(_httpService, selectedUser.UserId, selectedUser.Username, selectedUser.UserRoleIds);
-                    userRolesWindow.ShowDialog();
-                    LoadData(); // Refresh user data after closing the window
-                }
+                MessageBox.Show("Molimo odaberite korisnika za kojeg želite izmjeniti podatke.", "Nema korisnika", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
-            else
+
+            var selectedUser = dataGridUsers.SelectedItem as UserDto;
+            if (selectedUser != null)
             {
-                MessageBox.Show("Molimo odaberite korisnika za kojeg želite izmjeniti podatke.");
+                UserRolesWindow userRolesWindow = new UserRolesWindow(_httpService, selectedUser.UserId, selectedUser.Username, selectedUser.UserRoleIds);
+                userRolesWindow.ShowDialog();
+                LoadData(); // Refresh user data after closing the window
             }
         }
 
         // Handle Delete button click
         private async void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            if (_selectedUserId != -1)
+            if (dataGridUsers.SelectedItem == null) // No user is selected
             {
-                var result = MessageBox.Show($"Jeste li sigurni da želite obrisati korisnika s korisničkim id-em {_selectedUserId}?",
-                    "Potvrda brisanja", MessageBoxButton.YesNo);
-
-                if (result == MessageBoxResult.Yes)
-                {
-                    bool isDeleted = await DeleteUserAsync(_selectedUserId);
-                    if (isDeleted)
-                    {
-                        MessageBox.Show($"Korisnika s ID-em {_selectedUserId} obrisan.");
-                        // Refresh the data grid
-                        LoadData();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Neuspješno brisanje korisnika.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
+                MessageBox.Show("Molimo odaberite korisnika za brisanje.", "Nema korisnika", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
-            else
+
+            var result = MessageBox.Show($"Jeste li sigurni da želite obrisati korisnika s korisničkim id-em {_selectedUserId}?",
+                "Potvrda brisanja", MessageBoxButton.YesNo);
+
+            if (result == MessageBoxResult.Yes)
             {
-                MessageBox.Show("Molimo odaberite korisnika za brisanje.");
+                bool isDeleted = await DeleteUserAsync(_selectedUserId);
+                if (isDeleted)
+                {
+                    MessageBox.Show($"Korisnika s ID-em {_selectedUserId} obrisan.");
+                    // Refresh the data grid
+                    LoadData();
+                }
+                else
+                {
+                    MessageBox.Show("Neuspješno brisanje korisnika.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
